@@ -9,6 +9,6 @@ import ntpath
 import math
 
 
-now = time.time()
-time.sleep(3)
-print(time.time() - now)
+mark = (50 * 1.58 + 1.3 * 30) / (50 + 30)
+
+print(mark)

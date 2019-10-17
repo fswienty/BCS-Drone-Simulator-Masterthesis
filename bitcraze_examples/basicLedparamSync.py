@@ -36,7 +36,7 @@ import time
 import cflib.crtp
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 
-URI = 'radio://0/80/250K'
+URI = 'radio://0/80/2M/E7E7E7E7E5'
 
 # Only output errors from the logging framework
 logging.basicConfig(level=logging.ERROR)
@@ -53,22 +53,26 @@ if __name__ == '__main__':
         cf.param.set_value('ring.effect', '7')
         # Set the RGB values
         cf.param.set_value('ring.solidRed', '100')
-        cf.param.set_value('ring.solidGreen', '0')
-        cf.param.set_value('ring.solidBlue', '0')
-        time.sleep(2)
+        cf.param.set_value('ring.solidGreen', '100')
+        cf.param.set_value('ring.solidBlue', '100')
 
         # Set black color effect
-        cf.param.set_value('ring.effect', '0')
+        # cf.param.set_value('ring.effect', '0')
         time.sleep(1)
 
-        # Set fade to color effect
-        cf.param.set_value('ring.effect', '14')
-        # Set fade time i seconds
-        cf.param.set_value('ring.fadeTime', '1.0')
-        # Set the RGB values in one uint32 0xRRGGBB
-        cf.param.set_value('ring.fadeColor', '0x0000A0')
-        time.sleep(1)
-        cf.param.set_value('ring.fadeColor', '0x00A000')
-        time.sleep(1)
-        cf.param.set_value('ring.fadeColor', '0xA00000')
-        time.sleep(1)
+        cf.param.set_value('ring.effect', '9')
+        cf.param.set_value('ring.headlightEnable', '1')
+
+
+
+        # # Set fade to color effect
+        # cf.param.set_value('ring.effect', '14')
+        # # Set fade time i seconds
+        # cf.param.set_value('ring.fadeTime', '1.0')
+        # # Set the RGB values in one uint32 0xRRGGBB
+        # cf.param.set_value('ring.fadeColor', '0x0000A0')
+        # time.sleep(3)
+        # cf.param.set_value('ring.fadeColor', '0x00A000')
+        # time.sleep(3)
+        # cf.param.set_value('ring.fadeColor', '0xA00000')
+        # time.sleep(3)
