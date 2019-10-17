@@ -42,10 +42,9 @@ for i in range(0, agents):
     ax.scatter(traj[i, step, 0], traj[i, step, 1], traj[i, step, 2])
 
 SAVE = True
+
 if SAVE:
-    #fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    # plt.tight_layout(pad=0, w_pad=.5, h_pad=2.0)
-    plt.savefig(sys.path[0] + "/opt.pdf", dpi=None, facecolor='w', edgecolor='w',
+    plt.savefig(sys.path[0] + "/force.pdf", dpi=None, facecolor='w', edgecolor='w',
                 orientation='portrait', papertype=None, format=None,
                 transparent=False, bbox_inches='tight', pad_inches=.1,
                 frameon=None, metadata=None)
