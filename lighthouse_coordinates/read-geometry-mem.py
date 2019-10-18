@@ -61,7 +61,7 @@ class ReadMem:
 
 if __name__ == '__main__':
     # URI to the Crazyflie to connect to
-    uri = 'radio://0/80/2M/E7E7E7E7E0'
+    uri = 'radio://1/70/2M/E7E7E7E7E5'
 
     # Initialize the low-level drivers (don't list the debug drivers)
     cflib.crtp.init_drivers(enable_debug_driver=False)
