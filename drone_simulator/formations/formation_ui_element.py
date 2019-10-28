@@ -40,7 +40,7 @@ def loadFormationSelectionFrame(manager):
     print("{} formations loaded.".format(len(formations)))
 
 
-def _loadFormation(path: str) -> (np.array, int):
+def _loadFormation(path: str):
     """Loads the formation file at the specified path and returns a list containing its name and the drone positions as a numpy array"""
     name = ntpath.basename(path)
     name = os.path.splitext(name)[0]

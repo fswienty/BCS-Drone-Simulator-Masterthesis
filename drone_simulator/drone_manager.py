@@ -1,5 +1,6 @@
 import random
 import time
+from scipy.spatial.transform import Rotation as R
 
 from drone import Drone
 from formations.formation_ui_element import loadFormationSelectionFrame
@@ -9,6 +10,7 @@ import cflib.crtp
 from panda3d.core import Vec3
 from direct.showbase import DirectObject
 from direct.gui.DirectGui import DirectButton
+from direct.gui.DirectGui import DirectEntry
 from direct.gui.DirectGui import DirectFrame
 
 
@@ -19,10 +21,13 @@ class DroneManager(DirectObject.DirectObject):
         # the actual dimensions of the bcs drone lab in meters
         # self.roomSize = Vec3(3.40, 4.56, 2.56)
         # confined dimensions because the room and drone coordinates dont match up yet.
-        # Also, flying near the windows/close to walls/too high often makes the lps loose track
-        self.roomSize = Vec3(1.5, 2, 1.3)
+        # Also, flying near the windows/close to walls/too high often makes the llighthouse positioning system loose track
+        self.roomSize = Vec3(1.5, 2.5, 1.7)
         self.initDrones(droneList)
         self.initUI()
+
+        self.currentFormation = 0
+        self.isRotating = False
 
 
     def initDrones(self, droneList):
@@ -46,8 +51,11 @@ class DroneManager(DirectObject.DirectObject):
         # initialize drone control panel
         buttonSize = (-4, 4, -.2, .8)
         buttonDistance = 0.15
+    
+        entrySize = (0, 2, -.2, .8)
 
-        frame = DirectFrame(frameColor=(.2, .2, .2, 1), frameSize=(-.5, .5, -.7, .15), pos=(-.9, 0, -.6), scale=.5)
+        # frame = DirectFrame(frameColor=(.2, .2, .2, 1), frameSize=(-.5, .5, -.7, .15), pos=(-.9, 0, -.6), scale=.5)
+        frame = DirectFrame(frameColor=(.2, .2, .2, 1), frameSize=(-.5, .5, -.7, .15), pos=(-.9, 0, -.4), scale=.5)
 
         button = DirectButton(text="Start", scale=.1, frameSize=buttonSize, command=self.startLandAll)
         button["extraArgs"] = [button]
@@ -69,6 +77,30 @@ class DroneManager(DirectObject.DirectObject):
         button["extraArgs"] = [button]
         button.reparentTo(frame)
         button.setPos(Vec3(0, 0, -4 * buttonDistance))
+
+        button = DirectButton(text="Rotate", scale=.1, frameSize=buttonSize, command=self.toggleRotation)
+        button.reparentTo(frame)
+        button.setPos(Vec3(0, 0, -5 * buttonDistance))
+
+        button = DirectButton(text="Move", scale=.1, frameSize=buttonSize, command=self.moveFormation)
+        button.reparentTo(frame)
+        button.setPos(Vec3(0, 0, -6 * buttonDistance))
+
+        self.moveX = DirectEntry(text="", initialText="0", scale=.1, frameSize=entrySize)
+        self.moveX.reparentTo(frame)
+        self.moveX.setPos(Vec3(0.5, 0, -6 * buttonDistance))
+
+        self.moveY = DirectEntry(text="", initialText="0", scale=.1, frameSize=entrySize)
+        self.moveY.reparentTo(frame)
+        self.moveY.setPos(Vec3(0.75, 0, -6 * buttonDistance))
+
+        self.moveZ = DirectEntry(text="", initialText="0", scale=.1, frameSize=entrySize)
+        self.moveZ.reparentTo(frame)
+        self.moveZ.setPos(Vec3(1, 0, -6 * buttonDistance))
+
+        self.rotSpeed = DirectEntry(text="", initialText="3", scale=.1, frameSize=entrySize)
+        self.rotSpeed.reparentTo(frame)
+        self.rotSpeed.setPos(Vec3(0.5, 0, -5 * buttonDistance))
 
         # initialize an UI element with all available formations
         loadFormationSelectionFrame(self)
@@ -149,7 +181,7 @@ class DroneManager(DirectObject.DirectObject):
             print("Can't apply formation, drones are not started")
             return
 
-        name = formation[0]
+        # name = formation[0]
         dronePositions = formation[1]
         requiredDrones = len(dronePositions)
 
@@ -162,9 +194,44 @@ class DroneManager(DirectObject.DirectObject):
             print("The formation contains {0} points but there are {1} available drones, some drones will remain stationary".format(requiredDrones, availableDrones))
             maxNumber = requiredDrones
 
-        # print("applying {} formation".format(name))
+        # print("applying {} formation".format(formation[0]))
         for i in range(0, maxNumber):
             self.drones[i].setTarget(Vec3(dronePositions[i, 0], dronePositions[i, 1], dronePositions[i, 2]))
+
+        self.currentFormation = formation
+
+
+    def moveFormation(self):
+        if(self.currentFormation == 0):
+            return
+        newFormation = self.currentFormation
+        newFormation[1] += [float(self.moveX.get()), float(self.moveY.get()), float(self.moveZ.get())]
+        self.applyFormation(newFormation)
+
+
+    def toggleRotation(self):
+        if(self.currentFormation == 0):
+            return
+        if not self.isRotating:
+            self.isRotating = True
+            self.base.taskMgr.doMethodLater(0, self.rotateFormationTask, "RotateDrones")
+        else:
+            self.isRotating = False
+            self.base.taskMgr.remove("RotateDrones")
+
+
+    def rotateFormationTask(self, task):
+        task.delayTime = 0.1
+        newFormation = self.currentFormation
+        speed = 2
+        try:
+            speed = float(self.rotSpeed.get())
+        except:
+            speed = 2
+        r = R.from_euler('xyz', [0, 0, speed], degrees=True)
+        newFormation[1] = r.apply(newFormation[1])
+        self.applyFormation(newFormation)
+        return task.again
 
 
     def updateDronesTask(self, task):
