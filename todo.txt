@@ -1,6 +1,0 @@
-make own collision avoidance more intelligent
-    make ground and walls repel drones
-    better distance and velocity multipliers
-
-thesis
-    grobe gliederung aufschreiben
