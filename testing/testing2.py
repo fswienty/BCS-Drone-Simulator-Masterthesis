@@ -46,5 +46,6 @@ def get9Grid(dist):
     print(f"{-dist}, {-dist}, {.3}")
 
 
-mat = _loadFormation(os.path.join(sys.path[0], "9grid.csv"))
-printAsCSV(mat + [0.3,-.7,.7])
+# grid = get9Grid(.45)
+mat = _loadFormation(os.path.join(sys.path[0], "8grid1.csv"))
+printAsCSV(mat + [0, 0, .7])
