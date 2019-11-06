@@ -43,13 +43,18 @@ from cflib.crazyflie.syncLogger import SyncLogger
 from cflib.crazyflie.commander import Commander
 
 # URI to the Crazyflie to connect to
-uri = 'radio://0/80/2M/E7E7E7E7E5'
+uri = 'radio://0/80/2M/E7E7E7E7E4'
 
 # Change the sequence according to your setup
 # x    y    z  YAW
 sequence = [
     (0, 0, 0.5, 0),
     (0, 0, 0.15, 0)
+]
+
+sequenceNEWCOORDS = [
+    (1, 2, -1.5, 0),
+    (1, 2, -2, 0)
 ]
 
 sequence2 = [
@@ -168,15 +173,15 @@ def run_sequence(scf, sequence):
 
     for position in sequence2:
         print('Setting position {}'.format(position))
-        for _ in range(35):
+        for _ in range(20):
             cf.commander.send_position_setpoint(position[0], position[1], position[2], position[3])
-            time.sleep(0.1)    
+            time.sleep(0.1)
 
     # for position in start:
     #     #print('Setting position {}'.format(position))
     #     for _ in range(10):
     #         cf.commander.send_position_setpoint(position[0], position[1], position[2], position[3])
-    #         time.sleep(0.2)  
+    #         time.sleep(0.2)
 
     # for i in range(0, 50):
     #     t = time.perf_counter() * 3
@@ -190,7 +195,7 @@ def run_sequence(scf, sequence):
     #     #print('Setting position {}'.format(position))
     #     for _ in range(10):
     #         cf.commander.send_position_setpoint(position[0], position[1], position[2], position[3])
-    #         time.sleep(0.2)           
+    #         time.sleep(0.2)
 
     cf.commander.send_stop_setpoint()
     # Make sure that the last packet leaves before the link is closed since the message queue is not flushed before closing

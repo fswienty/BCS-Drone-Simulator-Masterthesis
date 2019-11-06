@@ -98,16 +98,16 @@ if __name__ == '__main__':
 
     # URIs to the drones that should be updated
     uris = [
-        'radio://0/80/2M/E7E7E7E7E0',
-        'radio://0/80/2M/E7E7E7E7E1',
-        'radio://0/80/2M/E7E7E7E7E2',
-        'radio://0/80/2M/E7E7E7E7E3',
-        'radio://0/80/2M/E7E7E7E7E4',
-        'radio://0/80/2M/E7E7E7E7E5',
-        'radio://0/80/2M/E7E7E7E7E6',
-        'radio://0/80/2M/E7E7E7E7E7',
-        'radio://0/80/2M/E7E7E7E7E8',
-        'radio://0/80/2M/E7E7E7E7E9',
+        'radio://0/80/2M/E7E7E7E7E0'
+        # 'radio://0/80/2M/E7E7E7E7E1',
+        # 'radio://0/80/2M/E7E7E7E7E2',
+        # 'radio://0/80/2M/E7E7E7E7E3',
+        # 'radio://0/80/2M/E7E7E7E7E4',
+        # 'radio://0/70/2M/E7E7E7E7E5',
+        # 'radio://0/70/2M/E7E7E7E7E6',
+        # 'radio://0/70/2M/E7E7E7E7E7',
+        # 'radio://0/70/2M/E7E7E7E7E8',
+        # 'radio://0/70/2M/E7E7E7E7E9',
     ]
 
     updated = []
