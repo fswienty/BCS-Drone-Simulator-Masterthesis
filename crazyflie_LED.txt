@@ -1,4 +1,4 @@
-The blue LED means that the FPGA has booted and the RED LED means that the fpga is in bootloader mode, the YELLOW LED means that the bootloader is busy doing something. When in firmware mode, the blue led should be lit but none of the other leds are currently controlled.
+The blue LED means that the FPGA has booted and the RED LED means that the FPGA is in bootloader mode, the YELLOW LED means that the bootloader is busy doing something. When in firmware mode, the blue led should be lit but none of the other leds are currently controlled.
 
 The board starts in bootloader mode, the Crazyflie checks the firmware and then boots the board in firmware mode so the sequence you are supposed to see is:
 
