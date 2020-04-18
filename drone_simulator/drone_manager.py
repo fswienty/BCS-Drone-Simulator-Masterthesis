@@ -35,6 +35,7 @@ class DroneManager(DirectObject.DirectObject):
         self.isStarted = False
         self.isConnected = False
         self.drones = []  # this is the list of all drones
+        self.currentDronePos = []  # this is the list of the most recent position that was sent by each drone
 
         if droneList == []:
             print("No drones to spawn")

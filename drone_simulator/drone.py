@@ -146,7 +146,6 @@ class Drone:
         self._drawTargetLine()
         # self._drawVelocityLine()
         self._drawForceLine()
-        # self._drawActualDroneLine()
         # self._drawSetpointLine()
 
         self._printDebugInfo()
@@ -169,7 +168,8 @@ class Drone:
         # get all drones within the sensors reach and put them in a list
         others = []
         for drone in self.manager.drones:
-            dist = (drone.getPos() - self.getPos()).length()
+            # dist = (drone.getPos() - self.getPos()).length()
+            dist = (drone.getLastSentPos() - self.getPos()).length()
             if dist > 0 and dist < self.SENSORRANGE:  # check dist > 0 to prevent drone from detecting itself
                 others.append(drone)
 
@@ -238,6 +238,11 @@ class Drone:
     def getPos(self) -> Vec3:
         return self.rigidBodyNP.getPos()
 
+    
+    def getLastSentPos(self) -> Vec3:
+        # TODO
+        pass
+
 
     def setPos(self, position: Vec3):
         self.rigidBodyNP.setPos(position)
@@ -284,15 +289,15 @@ class Drone:
         self.forceLineNP = self.base.render.attachNewNode(node)
 
 
-    def _drawActualDroneLine(self):
-        self.actualDroneLineNP.removeNode()
-        ls = LineSegs()
-        # ls.setThickness(1)
-        ls.setColor(0.0, 0.0, 0.0, 1.0)
-        ls.moveTo(self.getPos())
-        ls.drawTo(self.actualDronePosition)
-        node = ls.create()
-        self.actualDroneLineNP = self.base.render.attachNewNode(node)
+    # def _drawActualDroneLine(self):
+    #     self.actualDroneLineNP.removeNode()
+    #     ls = LineSegs()
+    #     # ls.setThickness(1)
+    #     ls.setColor(0.0, 0.0, 0.0, 1.0)
+    #     ls.moveTo(self.getPos())
+    #     ls.drawTo(self.actualDronePosition)
+    #     node = ls.create()
+    #     self.actualDroneLineNP = self.base.render.attachNewNode(node)
 
 
     def _drawSetpointLine(self):
