@@ -121,12 +121,14 @@ class Drone:
         self.scf.close_link()
 
 
-    def update(self, time):
+    def update(self, timeslot):
         """Update the virtual drone."""
         self._updateTargetForce()
         self._updateAvoidanceForce()
         self._clampForce()
-        self.lastSentPosition = self.getPos()
+
+        if self.id == timeslot:
+            self.lastSentPosition = self.getPos()
 
         if self.isConnected:
             self.sendPosition()
@@ -138,10 +140,6 @@ class Drone:
         # self._drawSetpointLine()
 
         self._printDebugInfo()
-
-        print(self.getPos()) 
-        print(self.getLastSentPos())
-        print("#############")
 
 
     def getPos(self) -> Vec3:

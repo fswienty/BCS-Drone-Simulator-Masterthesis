@@ -29,6 +29,8 @@ class DroneManager(DirectObject.DirectObject):
         self.currentFormation = 0
         self.isRotating = False
 
+        self.currentTimeslot = 0
+
 
     def initDrones(self, droneList):
         """Initializes the drones defined in droneList."""
@@ -47,11 +49,23 @@ class DroneManager(DirectObject.DirectObject):
 
         self.base.taskMgr.add(self.updateDronesTask, "UpdateDrones")
 
+
     def updateDronesTask(self, task):
         """Run the update methods of all drones."""
+        timeslotAmount = 10
+        timeslotLengthMilli = 100
+        timeslotLengthSec = timeslotLengthMilli / 1000
+
+        if task.time > (self.currentTimeslot * timeslotLengthSec) % timeslotAmount:
+            self.currentTimeslot = self.currentTimeslot + 1
+
+        if self.currentTimeslot > timeslotAmount:
+            self.currentTimeslot = 0
+
+        print(self.currentTimeslot)
+
         for drone in self.drones:
-            drone.update(task.time)
-        print(task.time)
+            drone.update(self.currentTimeslot)
         return task.cont
 
     def initUI(self):
