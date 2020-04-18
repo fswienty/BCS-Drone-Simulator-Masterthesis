@@ -47,6 +47,7 @@ class Drone:
         self.uri = uri
         if self.uri != "-1":
             self.canConnect = True
+        self.id = uri[-1]
 
         self.randVec = Vec3(random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1))
 
@@ -125,6 +126,7 @@ class Drone:
         self._updateTargetForce()
         self._updateAvoidanceForce()
         self._clampForce()
+        self.lastSentPosition = self.getPos()
 
         if self.isConnected:
             self.sendPosition()
@@ -136,6 +138,10 @@ class Drone:
         # self._drawSetpointLine()
 
         self._printDebugInfo()
+
+        print(self.getPos()) 
+        print(self.getLastSentPos())
+        print("#############")
 
 
     def getPos(self) -> Vec3:
@@ -153,24 +159,23 @@ class Drone:
             force = dist.normalized()
         else:
             force = (dist / self.FORCEFALLOFFDISTANCE)
-        # velMult = self.getVel().length() + 0.1
-        # velMult = velMult ** 2
         self.addForce(force * self.TARGETFORCE)
 
 
     def _updateAvoidanceForce(self):
         """Applies a force the the virtual drone which makes it avoid other drones."""
         # get all drones within the sensors reach and put them in a list
-        others = []
+        nearbyDrones = []
         for drone in self.manager.drones:
-            # dist = (drone.getPos() - self.getPos()).length()
             dist = (drone.getLastSentPos() - self.getPos()).length()
-            if dist > 0 and dist < self.SENSORRANGE:  # check dist > 0 to prevent drone from detecting itself
-                others.append(drone)
+            if drone.id == self.id:  # prevent drone from detecting itself
+                continue
+            if dist < self.SENSORRANGE: 
+                nearbyDrones.append(drone)
 
         # calculate and apply forces
-        for other in others:
-            distVec = other.getPos() - self.getPos()
+        for nearbyDrone in nearbyDrones:
+            distVec = nearbyDrone.getLastSentPos() - self.getPos()
             if distVec.length() < 0.2:
                 print("BONK")
             distMult = self.SENSORRANGE - distVec.length()
