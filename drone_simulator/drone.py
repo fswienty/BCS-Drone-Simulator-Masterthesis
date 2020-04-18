@@ -70,6 +70,7 @@ class Drone:
         self.target = position  # the long term target that the virtual drones tries to reach
         self.setpoint = position  # the immediate target (setpoint) that the real drone tries to reach, usually updated each frame
         self.waitingPosition = Vec3(position[0], position[1], 0.7)
+        self.lastSentPosition = self.waitingPosition  # the position that this drone last sent around
 
         self.printDebugInfo = printDebugInfo
         if self.printDebugInfo:  # put a second drone model on top of drone that outputs debug stuff
@@ -104,21 +105,7 @@ class Drone:
     def sendPosition(self):
         """Sends the position of the virtual drone to the real one."""
         cf = self.scf.cf
-
-        # position + the negative of the distance to the real drone
-        # diff = self.getPos() - self.actualDronePosition
-        # self.setpoint = self.getPos() + diff
-
-        #  position + some function of the velocity vector
-        # vel = self.getVel().length()
-        # multiplier = 0.5 * (math.tanh(4 * vel - 3) + 1)
-        # # pos = self.getPos() + self.getVel() * multiplier
-        # self.setpoint = self.getPos() + self.getVel() * 0.5 * multiplier
-
-        # position only
         self.setpoint = self.getPos()
-        # print('Sending position {} | {} | {}'.format(self.setpoint[0], self.setpoint[1], self.setpoint[2]))
-
         # send the setpoint
         cf.commander.send_position_setpoint(self.setpoint[0], self.setpoint[1], self.setpoint[2], 0)
 
@@ -133,7 +120,7 @@ class Drone:
         self.scf.close_link()
 
 
-    def update(self):
+    def update(self, time):
         """Update the virtual drone."""
         self._updateTargetForce()
         self._updateAvoidanceForce()
@@ -149,6 +136,14 @@ class Drone:
         # self._drawSetpointLine()
 
         self._printDebugInfo()
+
+
+    def getPos(self) -> Vec3:
+        return self.rigidBodyNP.getPos()
+
+    
+    def getLastSentPos(self) -> Vec3:
+        return self.lastSentPosition
 
 
     def _updateTargetForce(self):
@@ -173,23 +168,12 @@ class Drone:
             if dist > 0 and dist < self.SENSORRANGE:  # check dist > 0 to prevent drone from detecting itself
                 others.append(drone)
 
-        # get the root mean square position of all drones involved
-        # becomes just the drone position if there are no drones in sensor range
-        # massVec = self.getPos() ** 2
-        # for other in others:
-        #     massVec += other.getPos() ** 2
-        # massVec /= (others.__len__() + 1)
-        # massVec = self.root(massVec)
-
         # calculate and apply forces
         for other in others:
-            # perp = self.targetVector().cross(massVec - self.getPos())
             distVec = other.getPos() - self.getPos()
             if distVec.length() < 0.2:
                 print("BONK")
-            # distMult = max(0, self.SENSORRANGE - distVec.length())
             distMult = self.SENSORRANGE - distVec.length()
-            # avoidanceVector = perp.normalized() * 0.1 - distVec.normalized() * 0.9
             avoidanceDirection = self.randVec.normalized() * 2 - distVec.normalized() * 10
             avoidanceDirection.normalize()
             self.addForce(avoidanceDirection * distMult * self.AVOIDANCEFORCE)
@@ -201,14 +185,6 @@ class Drone:
         if totalForce.length() > 2:
             self.rigidBody.clearForces()
             self.rigidBody.applyCentralForce(totalForce.normalized())
-
-
-    # def root(self, vec: Vec3) -> Vec3:
-    #     """Takes the root of all elements of the supplied vector and returns it."""
-    #     x = math.sqrt(vec.x)
-    #     y = math.sqrt(vec.y)
-    #     z = math.sqrt(vec.z)
-    #     return Vec3(x, y, z)
 
 
     def targetVector(self) -> Vec3:
@@ -233,15 +209,6 @@ class Drone:
 
     def addForce(self, force: Vec3):
         self.rigidBody.applyCentralForce(force)
-
-
-    def getPos(self) -> Vec3:
-        return self.rigidBodyNP.getPos()
-
-    
-    def getLastSentPos(self) -> Vec3:
-        # TODO
-        pass
 
 
     def setPos(self, position: Vec3):
@@ -287,17 +254,6 @@ class Drone:
         ls.drawTo(self.getPos() + self.rigidBody.getTotalForce() * 0.2)
         node = ls.create()
         self.forceLineNP = self.base.render.attachNewNode(node)
-
-
-    # def _drawActualDroneLine(self):
-    #     self.actualDroneLineNP.removeNode()
-    #     ls = LineSegs()
-    #     # ls.setThickness(1)
-    #     ls.setColor(0.0, 0.0, 0.0, 1.0)
-    #     ls.moveTo(self.getPos())
-    #     ls.drawTo(self.actualDronePosition)
-    #     node = ls.create()
-    #     self.actualDroneLineNP = self.base.render.attachNewNode(node)
 
 
     def _drawSetpointLine(self):

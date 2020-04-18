@@ -47,6 +47,12 @@ class DroneManager(DirectObject.DirectObject):
 
         self.base.taskMgr.add(self.updateDronesTask, "UpdateDrones")
 
+    def updateDronesTask(self, task):
+        """Run the update methods of all drones."""
+        for drone in self.drones:
+            drone.update(task.time)
+        print(task.time)
+        return task.cont
 
     def initUI(self):
         # initialize drone control panel
@@ -233,14 +239,6 @@ class DroneManager(DirectObject.DirectObject):
         newFormation[1] = r.apply(newFormation[1])
         self.applyFormation(newFormation)
         return task.again
-
-
-    def updateDronesTask(self, task):
-        """Run the update methods of all drones."""
-        for drone in self.drones:
-            drone.update()
-        return task.cont
-
 
     def getRandomRoomCoordinate(self) -> Vec3:
         """Returns random 3D coordinates withing the confines of the room."""
