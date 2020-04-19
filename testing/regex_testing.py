@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import random
 
 
 
@@ -13,4 +14,5 @@ print(match)
 
 
 uri = "frg%//grE1E3448"
-print(uri[-1])
+for i in range(0, 10):
+    print(random.uniform(0, 1))

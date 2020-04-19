@@ -1,5 +1,6 @@
 import random
 import time
+import math
 from scipy.spatial.transform import Rotation as R
 
 from drone import Drone
@@ -48,25 +49,28 @@ class DroneManager(DirectObject.DirectObject):
                 self.drones.append(Drone(self, position, uri=uri))
 
         self.base.taskMgr.add(self.updateDronesTask, "UpdateDrones")
-
+        self.base.taskMgr.add(self.updateTimeslotTask, "UpdateTimeslot")
 
     def updateDronesTask(self, task):
         """Run the update methods of all drones."""
+        for drone in self.drones:
+            drone.update()
+        return task.cont
+
+    def updateTimeslotTask(self, task):
         timeslotAmount = 10
-        timeslotLengthMilli = 100
-        timeslotLengthSec = timeslotLengthMilli / 1000
+        timeslotLengthMilli = 200
+        task.delayTime = timeslotLengthMilli / 1000
 
-        if task.time > (self.currentTimeslot * timeslotLengthSec) % timeslotAmount:
-            self.currentTimeslot = self.currentTimeslot + 1
-
-        if self.currentTimeslot > timeslotAmount:
+        self.currentTimeslot += 1
+        if self.currentTimeslot >= timeslotAmount:
             self.currentTimeslot = 0
 
-        print(self.currentTimeslot)
+        # print(self.currentTimeslot)
 
         for drone in self.drones:
-            drone.update(self.currentTimeslot)
-        return task.cont
+            drone.updateSentPosition(self.currentTimeslot)
+        return task.again
 
     def initUI(self):
         # initialize drone control panel

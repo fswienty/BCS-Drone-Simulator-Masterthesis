@@ -47,7 +47,7 @@ class Drone:
         self.uri = uri
         if self.uri != "-1":
             self.canConnect = True
-        self.id = uri[-1]
+        self.id = int(uri[-1])
 
         self.randVec = Vec3(random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1))
 
@@ -121,14 +121,11 @@ class Drone:
         self.scf.close_link()
 
 
-    def update(self, timeslot):
+    def update(self):
         """Update the virtual drone."""
         self._updateTargetForce()
         self._updateAvoidanceForce()
         self._clampForce()
-
-        if self.id == timeslot:
-            self.lastSentPosition = self.getPos()
 
         if self.isConnected:
             self.sendPosition()
@@ -140,6 +137,15 @@ class Drone:
         # self._drawSetpointLine()
 
         self._printDebugInfo()
+    
+    def updateSentPosition(self, timeslot):
+        transmissionProbability = 0.9
+        if self.id == timeslot:
+            if random.uniform(0, 1) < transmissionProbability:
+                print(f"drone {self.id} updated position")
+                self.lastSentPosition = self.getPos()
+            else:
+                print(f"drone {self.id} failed!")
 
 
     def getPos(self) -> Vec3:
