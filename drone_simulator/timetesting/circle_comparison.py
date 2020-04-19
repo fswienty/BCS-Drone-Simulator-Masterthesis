@@ -48,7 +48,7 @@ def autolabel(rects):
 
 fig.tight_layout()
 
-SAVE = True
+SAVE = False
 if SAVE:
     plt.savefig(sys.path[0] + "/circle_completion_comparison.pdf", dpi=None, facecolor='w', edgecolor='w',
                 orientation='portrait', papertype=None, format=None,

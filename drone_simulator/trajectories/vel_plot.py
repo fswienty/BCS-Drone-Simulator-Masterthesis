@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 plt.rcParams.update({'font.size': 13})
 
-traj = np.load(sys.path[0] + "/10circle_vel.npy")
+traj = np.load(sys.path[0] + "/vel_traj.npy")
 agents = traj.shape[0]
 timesteps = traj.shape[1]
 
@@ -23,7 +23,7 @@ timeArray = np.linspace(0, timeNeeded, timesteps)
 for i in range(0, agents):
     plt.plot(timeArray, speed[i])
 
-SAVE = True
+SAVE = False
 if SAVE:
     plt.savefig(sys.path[0] + "/force_vel.pdf", dpi=None, facecolor='w', edgecolor='w',
                 orientation='portrait', papertype=None, format=None,
