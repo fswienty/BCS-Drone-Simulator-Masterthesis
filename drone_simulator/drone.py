@@ -142,10 +142,10 @@ class Drone:
         transmissionProbability = 0.9
         if self.id == timeslot:
             if random.uniform(0, 1) < transmissionProbability:
-                print(f"drone {self.id} updated position")
+                # print(f"drone {self.id} updated position")
                 self.lastSentPosition = self.getPos()
             else:
-                print(f"drone {self.id} failed!")
+                # print(f"drone {self.id} failed!")
 
 
     def getPos(self) -> Vec3:
