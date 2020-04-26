@@ -114,19 +114,19 @@ for t in range(0, timesteps):
 def getDiffs(arr):
     diffArr = np.zeros((agents, arr.shape[1]-1, 3))
     for t in range(0, arr.shape[1]-1):
-        diffArr[:,t,:] = traj[:,t,:] - traj[:,t+1,:]
+        diffArr[:,t,:] = arr[:,t,:] - arr[:,t+1,:]
     diffArr /= deltaTime
     return diffArr
 
-def getAcc(arr):
-    diffArr = np.zeros((agents, timesteps-2, 3))
-    for t in range(0, timesteps-2):
-        diffArr[:,t,:] = traj[:,t,:] - 2 * traj[:,t+1,:] + traj[:,t+2,:]
-    diffArr /= (deltaTime * deltaTime)
-    return diffArr
+# def getAcc(arr):
+#     diffArr = np.zeros((agents, timesteps-2, 3))
+#     for t in range(0, timesteps-2):
+#         diffArr[:,t,:] = arr[:,t,:] - 2 * arr[:,t+1,:] + arr[:,t+2,:]
+#     diffArr /= (deltaTime * deltaTime)
+#     return diffArr
 
-acc = getDiffs(getDiffs(traj))
-# acc = getAcc(traj)
+vel = getDiffs(traj)
+acc = getDiffs(vel)
 acc = np.square(acc)
 acc = np.sum(acc, axis=2)
 acc = np.sqrt(acc)
@@ -136,7 +136,7 @@ accMaxTimestep = 0
 for t in range(0, timesteps-2):
     for ag in range(0, agents):
         if acc[ag,t] > accMax:
-            accMax = acc[0,t]
+            accMax = acc[ag,t]
             accMaxTimestep = t
 
 
