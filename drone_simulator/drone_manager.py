@@ -58,18 +58,17 @@ class DroneManager(DirectObject.DirectObject):
         return task.cont
 
     def updateTimeslotTask(self, task):
-        timeslotAmount = 2
-        timeslotLengthMilli = 10
+        timeslotAmount = 10
+        timeslotLengthMilli = 70
         task.delayTime = timeslotLengthMilli / 1000
 
         self.currentTimeslot += 1
         if self.currentTimeslot >= timeslotAmount:
             self.currentTimeslot = 0
 
-        # print(self.currentTimeslot)
-
         for drone in self.drones:
             drone.updateSentPosition(self.currentTimeslot)
+
         return task.again
 
     def initUI(self):

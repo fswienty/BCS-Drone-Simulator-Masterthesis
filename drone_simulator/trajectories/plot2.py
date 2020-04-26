@@ -41,23 +41,20 @@ for i in range(0, agents):
     ax.plot3D(traj[i, trail:step + 1, 0], traj[i, trail:step + 1, 1], traj[i, trail:step + 1, 2])
     ax.scatter(traj[i, step, 0], traj[i, step, 1], traj[i, step, 2])
 
-SAVE = False
-if SAVE:
-    plt.savefig(sys.path[0] + "/force.pdf", dpi=None, facecolor='w', edgecolor='w',
-                orientation='portrait', papertype=None, format=None,
-                transparent=False, bbox_inches='tight', pad_inches=.1,
-                frameon=None, metadata=None)
-else:
-    plt.show()
+# SAVE = False
+# if SAVE:
+#     plt.savefig(sys.path[0] + "/force.pdf", dpi=None, facecolor='w', edgecolor='w',
+#                 orientation='portrait', papertype=None, format=None,
+#                 transparent=False, bbox_inches='tight', pad_inches=.1,
+#                 frameon=None, metadata=None)
+# else:
+    # plt.show()
 
 
 ################ calculations for metrics ################
+deltaTime = 0.05
 startPoints = np.around(traj[:,0,:], 0)
-endPoints = np.around(traj[:,-1,:], 1)
-# print("START POINTS")
-# print(startPoints)
-# print("END POINTS")
-# print(endPoints)
+endPoints = np.around(traj[:,-1,:], 2)
 
 ### COMPLETION TIME ###
 diff = np.zeros((agents, timesteps, 3))
@@ -70,7 +67,6 @@ diff = np.sqrt(diff)
 completionTime = 0
 completionTime = "DNF"
 completionMargin = 0.04
-timestepDeltaT = 0.05
 for t in range(0, timesteps):
     # print(f"{t}:")
     # print(diff[:,t])
@@ -80,7 +76,7 @@ for t in range(0, timesteps):
             finished = False
     if finished:
         completionStep = t
-        completionTime = completionStep * timestepDeltaT
+        completionTime = completionStep * deltaTime
         break
 
 ### TOTAL DISTANCE ###
@@ -114,9 +110,42 @@ for t in range(0, timesteps):
                 closestApproach = dist
                 closestApproachTimestep = t
 
+### LARGEST ACCELERATION ###
+def getDiffs(arr):
+    diffArr = np.zeros((agents, arr.shape[1]-1, 3))
+    for t in range(0, arr.shape[1]-1):
+        diffArr[:,t,:] = traj[:,t,:] - traj[:,t+1,:]
+    diffArr /= deltaTime
+    return diffArr
+
+def getAcc(arr):
+    diffArr = np.zeros((agents, timesteps-2, 3))
+    for t in range(0, timesteps-2):
+        diffArr[:,t,:] = traj[:,t,:] - 2 * traj[:,t+1,:] + traj[:,t+2,:]
+    diffArr /= (deltaTime * deltaTime)
+    return diffArr
+
+acc = getDiffs(getDiffs(traj))
+# acc = getAcc(traj)
+acc = np.square(acc)
+acc = np.sum(acc, axis=2)
+acc = np.sqrt(acc)
+
+accMax = 0
+accMaxTimestep = 0
+for t in range(0, timesteps-2):
+    for ag in range(0, agents):
+        if acc[ag,t] > accMax:
+            accMax = acc[0,t]
+            accMaxTimestep = t
+
 
 print("##############")
-print(f"Comletion time: {completionTime}s, Comletion timestep: {completionStep}")
+print("START POINTS")
+print(startPoints)
+print("END POINTS")
+print(endPoints)
+print(f"Comletion time: {completionTime}s @ timestep {completionStep}")
 print(f"Total distance: {totalDistance}")
-print(f"Closest approach: {closestApproach}, Closest approach timestep: {closestApproachTimestep}")
-# print(f"Largest Acceleration: {}")
+print(f"Closest approach: {closestApproach} @ timestep {closestApproachTimestep}")
+print(f"Largest Acceleration: {accMax} @ timestep {accMaxTimestep}")

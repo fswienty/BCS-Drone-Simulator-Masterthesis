@@ -139,12 +139,13 @@ class Drone:
         self._printDebugInfo()
     
     def updateSentPosition(self, timeslot):
-        transmissionProbability = 0.9
+        transmissionProbability = 1
         if self.id == timeslot:
             if random.uniform(0, 1) < transmissionProbability:
                 # print(f"drone {self.id} updated position")
                 self.lastSentPosition = self.getPos()
             else:
+                pass
                 # print(f"drone {self.id} failed!")
 
 
