@@ -233,6 +233,10 @@ class Drone:
         return self.rigidBody.setLinearVelocity(velocity)
 
 
+    def getAcc(self) -> Vec3:
+        return self.rigidBody.getTotalForce()
+
+
     def _drawTargetLine(self):
         self.targetLineNP.removeNode()
         ls = LineSegs()

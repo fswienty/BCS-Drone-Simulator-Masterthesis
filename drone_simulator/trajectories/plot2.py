@@ -52,7 +52,7 @@ for i in range(0, agents):
 
 
 ################ calculations for metrics ################
-deltaTime = 0.05
+deltaTime = 0.054
 startPoints = np.around(traj[:,0,:], 0)
 endPoints = np.around(traj[:,-1,:], 2)
 
@@ -66,7 +66,7 @@ diff = np.sqrt(diff)
 
 completionTime = 0
 completionTime = "DNF"
-completionMargin = 0.04
+completionMargin = 0.03
 for t in range(0, timesteps):
     # print(f"{t}:")
     # print(diff[:,t])
@@ -92,6 +92,12 @@ totalDistance = 0
 for t in range(0, completionStep-1):
     totalDistance += distanceBetweenSteps(traj, t)
 
+beelineDistance = startPoints - endPoints
+beelineDistance = np.square(beelineDistance)
+beelineDistance = np.sum(beelineDistance, axis=1)
+beelineDistance = np.sqrt(beelineDistance)
+beelineDistance = np.sum(beelineDistance, axis=0)
+    
 ### CLOSEST APPROACH ###
 def distanceBetweenDrones(arr, t, ag1, ag2):
     dist = arr[ag1,t,:] - arr[ag2,t,:]
@@ -118,15 +124,16 @@ def getDiffs(arr):
     diffArr /= deltaTime
     return diffArr
 
-# def getAcc(arr):
-#     diffArr = np.zeros((agents, timesteps-2, 3))
-#     for t in range(0, timesteps-2):
-#         diffArr[:,t,:] = arr[:,t,:] - 2 * arr[:,t+1,:] + arr[:,t+2,:]
-#     diffArr /= (deltaTime * deltaTime)
-#     return diffArr
+def getAcc(arr):
+    diffArr = np.zeros((agents, timesteps-2, 3))
+    for t in range(0, timesteps-2):
+        diffArr[:,t,:] = arr[:,t,:] - 2 * arr[:,t+1,:] + arr[:,t+2,:]
+    diffArr /= (deltaTime * deltaTime)
+    return diffArr
 
-vel = getDiffs(traj)
-acc = getDiffs(vel)
+# vel = getDiffs(traj)
+# acc = getDiffs(vel)
+acc = getAcc(traj)
 acc = np.square(acc)
 acc = np.sum(acc, axis=2)
 acc = np.sqrt(acc)
@@ -139,13 +146,26 @@ for t in range(0, timesteps-2):
             accMax = acc[ag,t]
             accMaxTimestep = t
 
+vel = np.load(sys.path[0] + "/vel_traj.npy")
+acc3 = getDiffs(vel)
+acc3 = np.square(acc3)
+acc3 = np.sum(acc3, axis=2)
+acc3 = np.sqrt(acc3)
+acc3Max = 0
+acc3MaxTimestep = 0
+for t in range(0, timesteps-2):
+    for ag in range(0, agents):
+        if acc3[ag,t] > acc3Max:
+            acc3Max = acc3[ag,t]
+            acc3MaxTimestep = t
 
 print("##############")
 print("START POINTS")
 print(startPoints)
 print("END POINTS")
 print(endPoints)
-print(f"Comletion time: {completionTime}s @ timestep {completionStep}")
-print(f"Total distance: {totalDistance}")
+print(f"Completion time: {completionTime}s @ timestep {completionStep}")
+print(f"Total distance: {totalDistance}, beeline distance: {beelineDistance}, efficiency: {beelineDistance / totalDistance}")
 print(f"Closest approach: {closestApproach} @ timestep {closestApproachTimestep}")
 print(f"Largest Acceleration: {accMax} @ timestep {accMaxTimestep}")
+print(f"Debug: {acc3Max} {acc3MaxTimestep} vel")

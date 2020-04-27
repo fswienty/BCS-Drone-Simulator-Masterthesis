@@ -106,6 +106,12 @@ class DroneSimulator(ShowBase):
 
     def updatePhysicsTask(self, task):
         dt = self.taskMgr.globalClock.getDt()
+
+        # self.dtSum += dt
+        # self.accumulator += 1
+        # print(self.dtSum / self.accumulator)
+        # print(dt)
+
         self.world.doPhysics(dt)
         return task.cont
 

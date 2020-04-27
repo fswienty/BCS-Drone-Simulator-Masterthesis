@@ -59,7 +59,7 @@ class DroneManager(DirectObject.DirectObject):
 
     def updateTimeslotTask(self, task):
         timeslotAmount = 10
-        timeslotLengthMilli = 70
+        timeslotLengthMilli = 10
         task.delayTime = timeslotLengthMilli / 1000
 
         self.currentTimeslot += 1
@@ -279,4 +279,13 @@ class DroneManager(DirectObject.DirectObject):
         for drone in self.drones:
             vel = drone.getVel()
             lst.append([vel.x, vel.y, vel.z])
+        return lst
+
+
+    def getAllAccelerations(self):
+        """Returns a list of the accelerations of all drones. Usefull when recording their paths for later."""
+        lst = []
+        for drone in self.drones:
+            acc = drone.getAcc()
+            lst.append([acc.x, acc.y, acc.z])
         return lst
