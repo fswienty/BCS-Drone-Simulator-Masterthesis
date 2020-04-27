@@ -280,12 +280,3 @@ class DroneManager(DirectObject.DirectObject):
             vel = drone.getVel()
             lst.append([vel.x, vel.y, vel.z])
         return lst
-
-
-    def getAllAccelerations(self):
-        """Returns a list of the accelerations of all drones. Usefull when recording their paths for later."""
-        lst = []
-        for drone in self.drones:
-            acc = drone.getAcc()
-            lst.append([acc.x, acc.y, acc.z])
-        return lst
