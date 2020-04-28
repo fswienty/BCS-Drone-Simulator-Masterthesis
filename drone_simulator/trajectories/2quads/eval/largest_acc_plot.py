@@ -11,7 +11,7 @@ plt.rc('ytick', labelsize=SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SIZE)    # legend fontsize
 plt.rc('figure', titlesize=SIZE)  # fontsize of the figure title
 
-x = [0, 10, 20, 40, 60, 80, 100, 120]
+x = [0, 20, 40, 60, 80, 100, 120]
 dataRaw = np.load(sys.path[0] + "/complete_results.npy")
 data = dataRaw[:,3,:]
 
@@ -25,8 +25,8 @@ ax.bar(x, y,
        align='center',
        color=('#d62728'),
        ecolor='black',
-       width=7,
-       capsize=7)
+       width=12,
+       capsize=12)
 
 ax.set_xlabel('Timeslot length (ms)')
 ax.set_ylabel('Largest acceleration (a.u.)')

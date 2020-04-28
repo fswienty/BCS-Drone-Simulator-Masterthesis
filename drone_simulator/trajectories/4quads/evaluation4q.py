@@ -151,7 +151,7 @@ def getResults(delay, run):
     results = [getCompletionTime() * deltaTime, getEfficiency(), getClosestApproach(), getAcc1(), getAcc3()]
     return results
 
-delays = [0, 10, 20, 40, 60, 80, 100, 120]
+delays = [0, 20, 40, 60, 80, 100, 120]
 
 completeData = np.zeros((len(delays), 5, 10))  # delay, metric, run
 for currDelayIndex in range(0, len(delays)):
