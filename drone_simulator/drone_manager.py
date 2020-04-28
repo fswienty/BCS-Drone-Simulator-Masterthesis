@@ -60,7 +60,7 @@ class DroneManager(DirectObject.DirectObject):
         return task.cont
 
     def updateTimeslotTask(self, task):
-        timeslotAmount = 4
+        timeslotAmount = 2
         task.delayTime = self.timeslotLengthMilli / 1000
 
         self.currentTimeslot += 1

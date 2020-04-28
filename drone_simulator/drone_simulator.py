@@ -43,7 +43,7 @@ class DroneSimulator(ShowBase):
         self.initScene()
         self.initBullet()
 
-        delay = 100
+        delay = 120
         self.droneManager = DroneManager(self, droneList, delay)
         DroneRecorder(self.droneManager, delay)
 
@@ -125,13 +125,14 @@ if __name__ == "__main__":
     dist = 0.7
     droneList.append([Vec3(dist, dist, .3), 'radio://0/80/2M/E7E7E7E7E0'])
     droneList.append([Vec3(dist, 0, .3), 'radio://0/80/2M/E7E7E7E7E1'])
-    droneList.append([Vec3(dist, -dist, .3), 'radio://0/80/2M/E7E7E7E7E2'])
-    droneList.append([Vec3(0, dist, .3), 'radio://0/80/2M/E7E7E7E7E3'])
+    # droneList.append([Vec3(dist, -dist, .3), 'radio://0/80/2M/E7E7E7E7E2'])
+    # droneList.append([Vec3(0, dist, .3), 'radio://0/80/2M/E7E7E7E7E3'])
     # droneList.append([Vec3(0, 0, .3), 'radio://0/80/2M/E7E7E7E7E4'])
     # droneList.append([Vec3(0, -dist, .3), 'radio://1/70/2M/E7E7E7E7E5'])
     # droneList.append([Vec3(-dist, dist, .3), 'radio://1/70/2M/E7E7E7E7E6'])
     # droneList.append([Vec3(-dist, 0, .3), 'radio://1/70/2M/E7E7E7E7E7'])
     # droneList.append([Vec3(-dist, -dist, .3), 'radio://1/70/2M/E7E7E7E7E8'])
+    # droneList.append([Vec3(-dist, -dist - .5, .3), 'radio://1/70/2M/E7E7E7E7E9'])
 
 
     app = DroneSimulator(droneList)

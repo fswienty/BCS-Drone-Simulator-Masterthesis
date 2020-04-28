@@ -43,14 +43,14 @@ class DroneRecorder(DirectObject.DirectObject):
 
     def save(self):
         self.run += 1
-
+        # self.delay = 0
         posTraj = np.asarray(self.recordingLstPos)
         posTraj = np.swapaxes(posTraj, 0, 1)  # make array in the shape agent, timestep, dimension
-        np.save(sys.path[0] + f"/trajectories/4quads/{self.delay}/pos_traj_{self.run}.npy", posTraj)
+        np.save(sys.path[0] + f"/trajectories/2quads/{self.delay}/pos_traj_{self.run}.npy", posTraj)
         if self.recordVelocity:
             velTraj = np.asarray(self.recordingLstVel)
             velTraj = np.swapaxes(velTraj, 0, 1)  # make array in the shape agent, timestep, dimension
-            np.save(sys.path[0] + f"/trajectories/4quads/{self.delay}/vel_traj_{self.run}.npy", velTraj)
+            np.save(sys.path[0] + f"/trajectories/2quads/{self.delay}/vel_traj_{self.run}.npy", velTraj)
         print(f"recording saved as /{self.delay}/xxx_traj_{self.run}.npy")
 
 
