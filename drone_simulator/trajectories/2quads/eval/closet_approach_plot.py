@@ -11,11 +11,11 @@ y = np.mean(data, axis=1)
 std = np.std(data, axis=1)
 
 fig, ax = plt.subplots()
-# plt.ylim(ymin = 0, ymax = 1)
+plt.ylim(ymin = 0, ymax = 0.45)
 ax.bar(x, y,
        yerr=std,
        align='center',
-       alpha=0.7,
+       color=('#2ca02c'),
        ecolor='black',
        width=7,
        capsize=10)
@@ -25,9 +25,9 @@ ax.set_ylabel('Closest Approach (a.u.)')
 ax.set_xticks(x)
 ax.yaxis.grid(True)
 
-SAVE = False
+SAVE = True
 if SAVE:
-    plt.savefig(sys.path[0] + "/force_time.pdf", dpi=None, facecolor='w', edgecolor='w',
+    plt.savefig(sys.path[0] + "/close2.pdf", dpi=None, facecolor='w', edgecolor='w',
                 orientation='portrait', papertype=None, format=None,
                 transparent=False, bbox_inches='tight', pad_inches=0,
                 frameon=None, metadata=None)
