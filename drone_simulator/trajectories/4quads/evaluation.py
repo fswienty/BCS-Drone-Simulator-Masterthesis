@@ -151,10 +151,17 @@ def getResults(delay, run):
     results = [getCompletionTime() * deltaTime, getEfficiency(), getClosestApproach(), getAcc1(), getAcc3()]
     return results
 
-delay = 100
-results = np.zeros((5, 10))
-for i in range(0, 10):
-    results[:,i] = getResults(delay, i+1)
+delays = [0, 10, 20, 40, 60, 80, 100]
 
-print(results)
-np.save(sys.path[0] + f"/{delay}/delay_{delay}_results.npy", results)
+completeData = np.zeros((len(delays), 5, 10))  # delay, metric, run
+for currDelayIndex in range(0, len(delays)):
+    currDelay = delays[currDelayIndex]
+    results = np.zeros((5, 10))  # 5 = amount of metrics, 10 = amount of runs
+    for currRun in range(0, 10):
+        results[:,currRun] = getResults(currDelay, currRun+1)
+    # print(f"########## RESULTS FOR DELAY {currDelay} ##########")
+    # print(results)
+    np.save(sys.path[0] + f"/eval/delay_{currDelay}_results.npy", results)
+    completeData[currDelayIndex,:,:] = results
+print(completeData)
+np.save(sys.path[0] + f"/eval/complete_results.npy", completeData)
