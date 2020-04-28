@@ -2,6 +2,14 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+SIZE = 15
+plt.rc('font', size=SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=SIZE)     # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SIZE)    # legend fontsize
+plt.rc('figure', titlesize=SIZE)  # fontsize of the figure title
 
 x = [0, 10, 20, 30, 40]
 dataRaw = np.load(sys.path[0] + "/complete_results.npy")
@@ -18,7 +26,7 @@ ax.bar(x, y,
        color=('#ff7f0e'),
        ecolor='black',
        width=7,
-       capsize=10)
+       capsize=15)
 
 ax.set_xlabel('Timeslot length (ms)')
 ax.set_ylabel('Trajectory efficiency')
