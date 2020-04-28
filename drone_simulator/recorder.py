@@ -4,10 +4,9 @@ import numpy as np
 import datetime
 from direct.showbase import DirectObject
 
-
 class DroneRecorder(DirectObject.DirectObject):
 
-    def __init__(self, droneManager):
+    def __init__(self, droneManager, delay):
         self.droneManager = droneManager
         self.recordingLstPos = []
         self.recordingLstVel = []
@@ -19,14 +18,16 @@ class DroneRecorder(DirectObject.DirectObject):
         self.prev = datetime.datetime.now()
         self.tAccum = 0
         self.amount = 0
-        self.delay = 0
+        self.deltaAvgDelay = 0
+        self.delay = delay
+        self.run = 0
 
 
     def recordDronesTask(self, task):
         self.now = datetime.datetime.now()
         delta = self.now - self.prev
-        if self.delay < 10:
-            self.delay += 1
+        if self.deltaAvgDelay < 10:
+            self.deltaAvgDelay += 1
         else:
             self.tAccum += delta.total_seconds()
             self.amount += 1
@@ -41,17 +42,16 @@ class DroneRecorder(DirectObject.DirectObject):
 
 
     def save(self):
-        delay = 0
-        run = 1
+        self.run += 1
 
         posTraj = np.asarray(self.recordingLstPos)
         posTraj = np.swapaxes(posTraj, 0, 1)  # make array in the shape agent, timestep, dimension
-        np.save(sys.path[0] + f"/trajectories/4quads/{delay}/pos_traj_{run}.npy", posTraj)
+        np.save(sys.path[0] + f"/trajectories/4quads/{self.delay}/pos_traj_{self.run}.npy", posTraj)
         if self.recordVelocity:
             velTraj = np.asarray(self.recordingLstVel)
             velTraj = np.swapaxes(velTraj, 0, 1)  # make array in the shape agent, timestep, dimension
-            np.save(sys.path[0] + f"/trajectories/4quads/{delay}/vel_traj_{run}.npy", velTraj)
-        print("recording saved")
+            np.save(sys.path[0] + f"/trajectories/4quads/{self.delay}/vel_traj_{self.run}.npy", velTraj)
+        print(f"recording saved as /{self.delay}/xxx_traj_{self.run}.npy")
 
 
     def toggleRecording(self):
@@ -64,8 +64,8 @@ class DroneRecorder(DirectObject.DirectObject):
         else:
             self.tAccum = 0
             self.amount = 0
-            self.delay = 0
-            
+            self.deltaAvgDelay = 0
+
             self.isRecording = False
             self.droneManager.base.taskMgr.remove("RecordDrones")
             self.save()

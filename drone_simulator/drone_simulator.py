@@ -43,8 +43,9 @@ class DroneSimulator(ShowBase):
         self.initScene()
         self.initBullet()
 
-        self.droneManager = DroneManager(self, droneList)
-        DroneRecorder(self.droneManager)
+        delay = 100
+        self.droneManager = DroneManager(self, droneList, delay)
+        DroneRecorder(self.droneManager, delay)
 
         self.stopwatchOn = False
         self.now = 0

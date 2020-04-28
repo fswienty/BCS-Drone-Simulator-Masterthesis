@@ -17,7 +17,7 @@ from direct.gui.DirectGui import DirectFrame
 
 class DroneManager(DirectObject.DirectObject):
 
-    def __init__(self, base, droneList):
+    def __init__(self, base, droneList, delay):
         self.base = base
         # the actual dimensions of the bcs drone lab in meters
         # self.roomSize = Vec3(3.40, 4.56, 2.56)
@@ -31,6 +31,8 @@ class DroneManager(DirectObject.DirectObject):
         self.isRotating = False
 
         self.currentTimeslot = 0
+
+        self.timeslotLengthMilli = delay
 
 
     def initDrones(self, droneList):
@@ -59,8 +61,7 @@ class DroneManager(DirectObject.DirectObject):
 
     def updateTimeslotTask(self, task):
         timeslotAmount = 4
-        timeslotLengthMilli = 10
-        task.delayTime = timeslotLengthMilli / 1000
+        task.delayTime = self.timeslotLengthMilli / 1000
 
         self.currentTimeslot += 1
         if self.currentTimeslot >= timeslotAmount:
@@ -220,6 +221,7 @@ class DroneManager(DirectObject.DirectObject):
 
         # print("applying {} formation".format(formation[0]))
         for i in range(0, maxNumber):
+            self.drones[i].setNewRandVec()
             self.drones[i].setTarget(Vec3(dronePositions[i, 0], dronePositions[i, 1], dronePositions[i, 2]))
 
         self.currentFormation = formation

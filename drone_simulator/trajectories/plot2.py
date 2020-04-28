@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider  # , Button, RadioButtons
 from mpl_toolkits.mplot3d import Axes3D
 
-traj = np.load(sys.path[0] + "/pos_traj.npy")
+
+traj = np.load(sys.path[0] + "/4quads/0/pos_traj_6.npy")
+vel = np.load(sys.path[0] + "/4quads/0/vel_traj_6.npy")
 agents = traj.shape[0]
 timesteps = traj.shape[1]
 
@@ -41,18 +43,18 @@ for i in range(0, agents):
     ax.plot3D(traj[i, trail:step + 1, 0], traj[i, trail:step + 1, 1], traj[i, trail:step + 1, 2])
     ax.scatter(traj[i, step, 0], traj[i, step, 1], traj[i, step, 2])
 
-# SAVE = False
-# if SAVE:
-#     plt.savefig(sys.path[0] + "/force.pdf", dpi=None, facecolor='w', edgecolor='w',
-#                 orientation='portrait', papertype=None, format=None,
-#                 transparent=False, bbox_inches='tight', pad_inches=.1,
-#                 frameon=None, metadata=None)
-# else:
-    # plt.show()
+SAVE = False
+if SAVE:
+    plt.savefig(sys.path[0] + "/force.pdf", dpi=None, facecolor='w', edgecolor='w',
+                orientation='portrait', papertype=None, format=None,
+                transparent=False, bbox_inches='tight', pad_inches=.1,
+                frameon=None, metadata=None)
+else:
+    plt.show()
 
 
 ################ calculations for metrics ################
-deltaTime = 0.054
+deltaTime = 0.0508
 startPoints = np.around(traj[:,0,:], 0)
 endPoints = np.around(traj[:,-1,:], 2)
 
@@ -146,7 +148,6 @@ for t in range(0, timesteps-2):
             accMax = acc[ag,t]
             accMaxTimestep = t
 
-vel = np.load(sys.path[0] + "/vel_traj.npy")
 acc3 = getDiffs(vel)
 acc3 = np.square(acc3)
 acc3 = np.sum(acc3, axis=2)

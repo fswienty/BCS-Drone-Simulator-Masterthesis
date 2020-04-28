@@ -123,6 +123,8 @@ class Drone:
 
     def update(self):
         """Update the virtual drone."""
+        # self.updateSentPositionBypass(0)
+
         self._updateTargetForce()
         self._updateAvoidanceForce()
         self._clampForce()
@@ -148,6 +150,8 @@ class Drone:
                 pass
                 # print(f"drone {self.id} failed!")
 
+    def updateSentPositionBypass(self, timeslot):
+        self.lastSentPosition = self.getPos()
 
     def getPos(self) -> Vec3:
         return self.rigidBodyNP.getPos()
@@ -215,6 +219,10 @@ class Drone:
     def setRandomTarget(self):
         """Sets a new random target for the drone."""
         self.target = self.manager.getRandomRoomCoordinate()
+
+    
+    def setNewRandVec(self):
+        self.randVec = Vec3(random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1))
 
 
     def addForce(self, force: Vec3):

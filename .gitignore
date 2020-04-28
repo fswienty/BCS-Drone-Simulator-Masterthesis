@@ -19,7 +19,6 @@ pc_home.code-workspace
 
 # my stuff
 cache/
-*.npy
 
 # C extensions
 *.so
