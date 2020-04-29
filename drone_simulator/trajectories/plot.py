@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider  # , Button, RadioButtons
 from mpl_toolkits.mplot3d import Axes3D
 
-traj = np.load(sys.path[0] + "/4quads/0/pos_traj_1.npy")
+amount = 4
+delay = 120
+run = 10
+traj = np.load(sys.path[0] + f"/{amount}quads/{delay}/pos_traj_{run}.npy")
 agents = traj.shape[0]
 timesteps = traj.shape[1]
 

@@ -29,7 +29,7 @@ ax.bar(x, y,
        capsize=12)
 
 ax.set_xlabel('Timeslot length (ms)')
-ax.set_ylabel('Time until completion (s)')
+ax.set_ylabel('Completion time (s)')
 ax.set_xticks(x)
 ax.yaxis.grid(True)
 
